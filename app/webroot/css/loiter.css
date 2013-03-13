@@ -1,0 +1,53 @@
+@CHARSET "UTF-8";
+pre {
+	width: 99%;
+}
+
+.navbar {
+	background-color: #ccc;
+	height: 30px;
+}
+.nav-list li {
+	text-align: center;
+}
+
+.nav-header {
+	background: #D6D6D6;
+	text-align: center;
+}
+
+form .multiple {
+	list-style: none;
+}
+
+form .multiple textarea{
+	width: 80%;
+}
+
+form .multiple select {
+	margin: 0;
+}
+
+form .multiple li{
+	margin: 10px;	
+	line-height: 25px;	
+	border-bottom: 1px solid #ccc;
+}
+
+form .multiple-thumb {
+	width: 8%;
+	float: left;
+	position: relative;
+}
+form .multiple-detail {
+	width: 80%;
+	position: relative;
+	float: left;
+}
+form .multiple-submit {
+	float: right;
+	margin-right: 200px;
+}
+.clear {
+	clear: both;
+}

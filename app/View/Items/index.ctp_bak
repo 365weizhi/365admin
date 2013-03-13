@@ -1,0 +1,128 @@
+<style>
+	#search-list {overflow:hidden;*zoom:1;}
+	#search-list p {margin:2px 0;}
+	#search-list li {float:left;padding:5px;background: #F7F7F7;margin:0 10px 10px 0;list-style-type:none;color:#B3B3B3;}
+	#search-list li a {display:block;cursor:pointer;}
+	#search-list li img {height:200px;}
+</style>
+<!--
+
+<div style="border:3px solid #ccc; padding-top: 10px;padding-left:5px;margin-bottom:0px;">
+	<label>一级目录:</label>
+	<form method="post" >
+	<?php 
+		$counter = 0;
+		foreach($ancestors as $ancestor){
+	?>
+			<input type="checkbox" name="CartegoryAncestor[<?php echo $counter++;?>]" 
+				value="<?php echo $ancestor['CategoryAncestor']['id'];?>"
+			> 
+			<?php echo $ancestor['CategoryAncestor']['name']; ?>
+	<?php 
+		}
+	?>
+	<br>
+	<input type="submit" value="确定" />
+	</form>
+</div>
+
+<div style="border:3px solid #ccc; padding-top: 10px;padding-left:5px;margin-bottom:0px;">
+	<label>二级目录:</label>
+	<form method="post" >
+	<?php 
+		$counter = 0;
+		foreach($parents as $parent){
+	?>
+			<input type="checkbox" name="CategoryParent<?php echo $counter++;?>[id]" 
+				value="<?php echo $parent['CategoryParent']['id'];?>"> 
+			<?php echo $parent['CategoryParent']['name']."-".$parent['CategoryParent']['nick']; ?>
+	<?php 
+		}
+	?>
+	<br>
+	<input type="submit" value="确定" />
+	</form>
+</div>
+
+-->
+<form method="post">
+   <table>
+	<tr>
+		<th>
+			<label>Keyword</label>
+		</th>
+		<th>
+			<label>Category</label>
+		</th>
+		<th>
+			<label>Area</label>
+		</th>
+		<th>
+		</th>
+		</tr>
+	<tr>
+		<th>
+			<input name="Search[keyword]" value="<?php echo isset($_POST['Search']['keyword'])?$_POST['Search']['keyword']:'';?>" />
+		</th>
+		<th>
+			<select name="Search[category]">
+			<?php
+			//Category gets from Taobao
+			foreach($Category as $cat){
+				if(isset($_POST['Search']['category']) && $_POST['Search']['category'] == $cat['Cat']['id']){
+					echo "<option value=".$cat['Category']['id']." selected >".$cat['Category']['name']."</option>";
+				}
+				else{
+					echo "<option value=".$cat['Category']['id'].">".$cat['Category']['name']."</option>";
+				}
+			}
+			?>
+			</select>
+		</th>
+		<th>
+			<input name="Search[area]" value="<?php echo (isset($_POST['Search']['area'])?$_POST['Search']['area']:'');?>" />
+		</th>
+		<th>
+	   		<input type="submit" value="Search"/>
+		</th>
+	</tr>
+   </table>
+</form>
+
+<?php
+echo "<ul id='search-list'>";
+if(!$search){
+	echo '没有找到条目，请修改关键词或者类别。';
+} else{
+    if(!isset($data['count']) || $data['count'] <= 0){
+	echo '没有找到条目，请修改关键词或者类别。';
+    }
+    else {
+	foreach($data['resq']->taobaoke_item as $taobaoke_item){
+		//pr($taobaoke_item);
+?>
+	<li>
+	<a  target="_blank"
+		href='<?php echo $taobaoke_item->click_url; ?>'
+		data-taobaoke_id='<?php echo $taobaoke_item->num_iid; ?>' 
+		title='<?php echo strip_tags($taobaoke_item->title);?>' 
+		data-price='<?php echo $taobaoke_item->price;?>' 
+		data-commission='<?php echo $taobaoke_item->commission; ?>' 
+		data-sellernick='<?php echo $taobaoke_item->nick; ?>'
+	>
+		<img src="<?php echo $taobaoke_item->pic_url."_120x120.jpg";?>" alt="<?php echo $taobaoke_item->title;?>"/>
+	</a>
+	<p>
+	    <span class="right"><?php echo $taobaoke_item->volume; ?>件/30天</span>
+	    <span><?php echo $taobaoke_item->commission; ?></span> /
+	    <span><?php echo $taobaoke_item->price;?></span>
+	    	
+	    <a target="_blank" href="<?php echo $this->webroot."items/add/".$taobaoke_item->num_iid?>" class="btn btn-info">添加</a>
+	</p>
+	</li>
+<?php
+	}
+    }
+}
+echo "</ul>";
+?>

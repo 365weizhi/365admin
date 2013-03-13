@@ -1,0 +1,112 @@
+<?php
+App::import('Vendor', 'TopApi');
+
+class ItemsController extends AppController{
+	
+	public function index(){
+		//$this->Item->Category->CategoryParent->recursive = -1;
+		//$this->set("data", $this->Item->find("all"));
+		/*
+		$this->set("ancestors", $this->Item->Category->CategoryParent->CategoryAncestor->find("all"));
+		
+		if(isset($_POST['CartegoryAncestor'])){
+			$parents = array();
+			foreach($_POST['CartegoryAncestor'] as $ancestor){
+				$parents = array_merge($parents, $this->Item->Category->CategoryParent->find("all", array(
+					'conditions'=>array(
+						'category_ancestor_id'=>$ancestor
+					)
+				)));
+			}
+			//$this->set("ancestors_id", $_POST['CategoryAncestor']);
+		}
+		else{
+			$parents = $this->Item->Category->CategoryParent->find("all");
+		}
+		$this->set("parents", $parents);
+		
+		$category = array();
+		if(isset($_POST['CategoryParent'])){
+			foreach($_POST['CategoryParent'] as $parent){
+				$category = array_merge($category, $this->Item->Category->find("all", array(
+					'conditions'=>array(
+						'category_parent_id'=>$parent
+					)
+				)));
+			}
+		}
+		else 
+			$category = $this->Item->Category->find("all");
+			
+		$this->set("Category", $category);
+		*/
+		$this->set("data", $this->Item->find("all"));
+		$this->set("Category", $this->Item->Category->find("all"));
+		if(isset($_POST['Search'])){
+			$this->set("search", true);	
+			$this->set("data", $this->search(
+				$_POST['Search']['keyword'], 
+				$_POST['Search']['category'], 
+				$_POST['Search']['area']
+			));
+		}
+		else{
+			$this->set("search", false);
+		}
+	}
+	
+	public function add($num_iid=0){
+		$count = $this->Item->find('count', array(
+			'conditions'=>array(
+				'num_iid' => $num_iid,
+			)		
+		));
+		
+		if($count > 0){
+			$this->Session->setFlash("已有该商品.");
+			$this->redirect("index");			
+		}
+		$item = $this->getItemById($num_iid);
+		
+		if(isset($_POST['description'])){
+			$item['Item']['description'] = $_POST['description'];
+			$rt = $this->Item->save($item);
+			if($rt){
+				$this->Session->setFlash("保存成功.");
+				$this->redirect("index");
+			} 
+			else {
+				$this->Session->setFlash("保存失败.");
+				$this->redirect("index");
+			}
+		}
+		$this->set('item', $item);
+	}
+	
+	public function getItemById($num_iid){
+	    if(isset($num_iid)){
+			$api = new TopApi();
+			$resq = $api->fetch($num_iid);
+			return $resq;
+	    }
+	}
+	
+	/**
+	* Search items by keywords
+	*/
+	function search($keyword, $cid = 0, $area =''){
+		$api = new TopApi();
+		$data['keyword'] = $keyword;
+		$resq = $api->searchItem($keyword, $cid, $area);
+		if(isset($resq->total_results) && $resq->total_results > 0){
+			$data['resq'] = $resq->taobaoke_items;
+			$data['count'] = $resq->total_results;
+		}
+		else {
+			$data['resq'] = '';
+			$data['count'] = 0;
+		}	
+		return $data;
+	}
+}
+?>
