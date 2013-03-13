@@ -39,18 +39,14 @@
 
 
 <?php 
-	if(isset($category_id)){
-		$items = $items['Item'];
-	}
 	foreach($items as $item){
-		if(!isset($category_id)){
-			$item = $item['Item'];	
-		}
 ?>
 	<div class="span2" >
 		<div class="thumbnail" id="carousel-selector-0">
-			<img onclick="window.location.href='<?php echo $item['click_url'];?>'" class="thumbnail" src="<?php echo $item['pic_url']."_100x100.jpg"?>" />
-			<a target="_blank" href="<?php echo $item['click_url'];?>">查看</a>
+		<a target="_blank" href="<?php echo $item['Item']['pic_url']?>" id="item-image">
+			<img class="thumbnail" src="<?php echo $item['Item']['pic_url']."_100x100.jpg"?>" />
+		</a>
+			<a target="_blank" href="<?php echo $item['Item']['click_url'];?>">查看</a>
 			<a href="">删除</a>
 			<a href="">移动</a>
 		</div>
@@ -58,8 +54,10 @@
 <?php 
 	}
 ?>
-
 <script>
+$("#item-image").click(function(){
+	$("#modal img").attr("src", $(this).children("input").val());
+});
 $("#depots-category").change(function(){
 	window.location.href = "/365admin/depots/index/"+this.value;
 });	

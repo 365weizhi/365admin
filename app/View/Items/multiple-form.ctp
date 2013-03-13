@@ -3,6 +3,7 @@
 <?php 
 	foreach($items as $item){
 		$item = $item['Item'];
+		pr($item);
 ?>
 		<li>
 			<div class="multiple-thumb">
@@ -16,15 +17,13 @@
 				<input type="hidden" name="Item<?php echo $item['num_iid'];?>[click_url]" value="<?php echo isset($item['click_url'])?$item['click_url']:$item['url'];?>"/>
 				<input type="hidden" name="Item<?php echo $item['num_iid'];?>[shop_click_url]" value="<?php echo isset($item['shop_click_url'])?$item['shop_click_url']:$item['url'];?>"/>
 				<input type="hidden" name="Item<?php echo $item['num_iid'];?>[nick]" value="<?php echo isset($item['nick'])?$item['nick']:'';?>"/>
-				<input type="hidden" name="Item<?php echo $item['num_iid'];?>[cid]" value="<?php echo $item['cid'];?>"/>
-				<input type="hidden" name="Item<?php echo $item['num_iid'];?>[content_id]" id="content_id<?php echo $item['num_iid'];?>"/>
 				标题：<input style="width:80%" value="<?php echo $item['title'];?>" name="Item<?php echo $item['num_iid'];?>[title]"/>
 				<br><br>
 				位置：<input value="<?php echo isset($item['item_location'])?$item['item_location']:'';?>" name="Item<?php echo $item['num_iid'];?>[item_location]"/>
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				价格：<?php echo $item['price'];?>￥
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				专刊：<select name="Item<?php echo $item['num_iid'];?>[content_id]">
+				分类：<select name="Item<?php echo $item['num_iid'];?>[cid]">
 						<?php 
 							foreach($categories as $category) {
 								$category = $category['Category'];

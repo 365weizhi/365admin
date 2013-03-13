@@ -21,8 +21,14 @@ class ItemsController extends AppController{
 			$Item = array();
 			$Item['Item'] = $item;
 			$Item['Item']['id'] = '';
-			$this->Item->Category->query("update 365wzs_categories set son_count=son_count+1 where id=".$Item['Item']['content_id']);
-			$this->Item->save($Item);
+			$CategoryItem = array();
+			$CategoryItem['CategoryItem']['category_id'] = $Item['Item']['cid'];
+			$this->Item->create();
+			$this->Item->CategoryItem->create();
+			$this->Item->Category->query("update 365wzs_categories set son_count=son_count+1 where id=".$Item['Item']['cid']);
+			$item = $this->Item->save($Item);
+			$CategoryItem['CategoryItem']['item_id'] = $item['Item']['id'];
+			$this->Item->CategoryItem->save($CategoryItem); 
 		}
 		$this->redirect("/items/multiple");
 	}

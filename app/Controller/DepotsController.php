@@ -4,7 +4,7 @@ class DepotsController extends AppController{
 	
 	public function index($category_id = null){
 		if(isset($category_id)){
-			$items = $this->CategoryItem->find("first", array(
+			$items = $this->CategoryItem->find("all", array(
 				'conditions'=>array(
 					'category_id'=>$category_id,
 				)
